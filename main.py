@@ -1,16 +1,47 @@
-# This is a sample Python script.
+import time
+from gpiozero import Servo
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+# --- Configuration ---
 
+# Set the GPIO pin number (using BCM numbering)
+# You specified GPIO 2, which is Pin 3 on the header.
+SERVO_PIN = 2
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+# --- Main Program ---
 
+print(f"Starting servo control on GPIO {SERVO_PIN}...")
+print("Press CTRL+C to stop.")
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+# Create a Servo object linked to your pin
+# By default, gpiozero uses a standard pulse width range
+# (1ms for min, 1.5ms for mid, 2ms for max)
+# If your servo behaves strangely, you might need to
+# calibrate these values.
+servo = Servo(SERVO_PIN)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+try:
+    # Loop forever to move the servo back and forth
+    while True:
+        # Move to the minimum position (approx. 0 degrees)
+        print("Moving to min...")
+        servo.min()
+        time.sleep(2)
+
+        # Move to the middle position (approx. 90 degrees)
+        print("Moving to mid...")
+        servo.mid()
+        time.sleep(2)
+
+        # Move to the maximum position (approx. 180 degrees)
+        print("Moving to max...")
+        servo.max()
+        time.sleep(2)
+
+except KeyboardInterrupt:
+    # This block runs when you press CTRL+C
+    print("\nStopping program.")
+
+finally:
+    # Clean up the GPIO pin
+    servo.close()
+    print("GPIO cleanup complete. Exiting.")
